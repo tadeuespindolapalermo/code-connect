@@ -16,16 +16,24 @@ export type LoginCredentials = {
 type LoginFormProps = {
   onSubmit?: (credentials: LoginCredentials) => void
   onSocialLogin?: (provider: SocialProvider) => void
+  statusMessage?: string
 }
 
-export function LoginForm({ onSubmit, onSocialLogin }: LoginFormProps) {
+export function LoginForm({ onSubmit, onSocialLogin, statusMessage }: LoginFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    onSubmit?.({ username, password, rememberMe })
+    const trimmedUsername = username.trim()
+    if (!trimmedUsername) {
+      setError('Informe seu email ou usuário.')
+      return
+    }
+    setError('')
+    onSubmit?.({ username: trimmedUsername, password, rememberMe })
   }
 
   return (
@@ -66,11 +74,22 @@ export function LoginForm({ onSubmit, onSocialLogin }: LoginFormProps) {
             forgotPasswordTo="/esqueci-senha"
           />
         </div>
+        {error && (
+          <p role="alert" className="text-sm text-red-400">
+            {error}
+          </p>
+        )}
         <Button type="submit" className="mt-4">
           Login
           <Icon name="arrow-right" className="size-4" />
         </Button>
       </form>
+
+      {statusMessage && (
+        <p role="status" className="text-center text-sm text-text-primary">
+          {statusMessage}
+        </p>
+      )}
 
       <div className="flex flex-col gap-2">
         <Divider text="ou entre com outras contas" />

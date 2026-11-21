@@ -52,4 +52,32 @@ describe('LoginForm', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Gmail' }))
     expect(onSocialLogin).toHaveBeenCalledWith('gmail')
   })
+
+  it('rejects a username made only of spaces', async () => {
+    const onSubmit = vi.fn()
+    renderForm({ onSubmit })
+
+    await userEvent.type(screen.getByLabelText('Email ou usuário'), '   ')
+    await userEvent.type(screen.getByLabelText('Senha'), 'segredo')
+    await userEvent.click(screen.getByRole('button', { name: 'Login' }))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent('Informe seu email ou usuário.')
+  })
+
+  it('trims the username before submitting', async () => {
+    const onSubmit = vi.fn()
+    renderForm({ onSubmit })
+
+    await userEvent.type(screen.getByLabelText('Email ou usuário'), '  usuario123 ')
+    await userEvent.type(screen.getByLabelText('Senha'), 'segredo')
+    await userEvent.click(screen.getByRole('button', { name: 'Login' }))
+
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ username: 'usuario123' }))
+  })
+
+  it('shows the status message', () => {
+    renderForm({ statusMessage: 'Login em breve.' })
+    expect(screen.getByRole('status')).toHaveTextContent('Login em breve.')
+  })
 })

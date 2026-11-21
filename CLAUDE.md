@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-pnpm workspace monorepo (`pnpm-workspace.yaml` → `apps/*`) with two apps, both still close to their starter templates:
+pnpm workspace monorepo (`pnpm-workspace.yaml` → `apps/*`) with two apps:
 
 - `apps/web` — React 19 + Vite 8 SPA (TypeScript 7, Oxlint). Dev server on Vite's default port (5173).
 - `apps/api` — NestJS 12 HTTP API (TypeScript 6, Vitest, Oxlint, Prettier). Listens on `PORT` or 3000.
@@ -22,7 +22,7 @@ pnpm dev:web      # web only
 pnpm dev:api      # api only
 pnpm build        # build all apps (web: tsc -b && vite build; api: nest build → dist/)
 pnpm lint         # oxlint in every app
-pnpm test         # runs `test` in every app that has one (currently only api)
+pnpm test         # runs `test` in every app that has one (web and api)
 ```
 
 Run any app script with the filter aliases: `pnpm web <script>` / `pnpm api <script>`.
